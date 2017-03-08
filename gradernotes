@@ -1,0 +1,7 @@
+I wrote this code myself - Wei Leung
+
+There are many bugs regarding this code 
+such as correctly using the sigterm to kill processes,
+handling premature EOF within parse, entering "echo logout" has a problem with correctly parsing, and the 
+redirections are questionably working at best, I cannot figure out how to detect files already created as well as working with input output 
+correctly. Did not use stat in the program either.
