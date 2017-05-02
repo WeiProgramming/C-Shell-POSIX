@@ -1,7 +1,7 @@
 I wrote this code myself - Wei Leung
 
 There are many bugs regarding this code 
-such as correctly using the sigterm to kill processes,
-handling premature EOF within parse, entering "echo logout" has a problem with correctly parsing, and the 
-redirections are questionably working at best, I cannot figure out how to detect files already created as well as working with input output 
-correctly. Did not use stat in the program either.
+Mainly the bugs found that through the input testing from the autograder. I found that inputs 18,17,19,88
+do not work. I was not able to correctly handle >>& redirection, reading \| correctly, as well as not being able to treat #
+as a comment correctly when reading command as a script file, and lastly, I was not able to handle buffer overruns as well as continuously print after premature EOF,
+further known bugs that I know of and not tested with the inut tests are my history command !! which only works up till the 9th command. 

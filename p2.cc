@@ -2,7 +2,7 @@
 *Name: Wei Leung
 *Prof Name: Carroll
 *Class: CS570
-*4/26/2017
+*2/28/2017
 */
 
 #include <time.h>
@@ -66,22 +66,22 @@ int flags = O_CREAT | O_EXCL | O_RDWR ;
 void sigcatcher(int signum){
         exit(0);
 }
+
 int main(int argc, char* argv[]){
 	signal(SIGTERM,sigcatcher);
 	pid_t pid, kpid;
 	int numWords;
 	poundFlag = 0;
-	//checking if the test should be ran as a script file if 
-	if(argv[1] != NULL && (argc == 2)){
+	
+	if(argv[1] != NULL && (strcmp(argv[1],"<") != 0)){
 		poundFlag++;
 		inputFD = open(argv[1],O_RDONLY);
 		dup2(inputFD,STDIN_FILENO);
 		close(inputFD);
 	}
 	for(;;){
-		if(poundFlag == 0){
-			printf("%%%d%% ",promptNumber);
-		}
+		printf("%%%d%% ",promptNumber);
+		
 		numWords = parse();
 		if(rVal == -2){
 			fprintf(stderr,"Unmatched '.\n");
@@ -103,11 +103,14 @@ int main(int argc, char* argv[]){
 		}
 		//increments each processed line
 		promptNumber++;
+		
 		if(strcmp(newargv[newargLoc],"cd") == 0){
 			if(newargv[newargLoc+1] == NULL){ //if just cd with no arguments
                 char *homeVar = getenv("HOME");
                 int a = chdir(homeVar);
                 if(a == 0){
+                	printf("success");
+                	printf("\n");
                 	continue;
                 }
                 else{
@@ -118,6 +121,8 @@ int main(int argc, char* argv[]){
             else if(newargv[newargLoc+1] != NULL && newargv[newargLoc+2] == NULL || poundFlag != 0){ //if cd has an argument
             	int b = chdir(newargv[newargLoc+1]);
             	if(b == 0){
+                	printf("success2");
+                	printf("\n");
                     continue;
                 } 
                 else{
@@ -242,7 +247,7 @@ int main(int argc, char* argv[]){
 	exit(0);
 }
 
-//parse program
+
 int parse(){
 	int wordCounter = 0; //counts the number of words resets every call to keep track of one command at a time
 	left = NULL;
@@ -321,14 +326,18 @@ int parse(){
 		}
 		
 // 		this will check # if and only if it's by itself
-		if(rVal == 1 && poundFlag != 0){
+		if(poundFlag != 0){
 			if(*(s+offset) == '#'){
 				poundFlag++;
-				s[offset+ rVal] = '\0';
-				offset += rVal+1;
+				s[offset+ 1] = '\0';
+				offset += 1+1;
 				wordCounter++;
 				continue;
 			}
+			s[offset+ rVal] = '\0'; //for the logout
+			offset += rVal+1;
+			wordCounter++;
+			continue;
 		}
 		//checking for pipe symbol
 		if(*(s+offset) == '|'){
@@ -384,7 +393,6 @@ int parse(){
 			return wordCounter;
 	}
 	num++;
-	//num is a trigger number that thats the values to specific locations of newargv once a successful command is read
     if(num == 1){
         one = newargLoc;
 		bangLoc = newargLoc;
@@ -432,9 +440,6 @@ int parse(){
 }
 void pipeExec(){
    	pid_t pid,kpid,kkpid;
-   	
-   	fflush(stdout);
-	fflush(stderr);
    	
 	if((kpid = fork()) == 0){
 		int fildes[2];

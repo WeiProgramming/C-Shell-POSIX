@@ -51,14 +51,14 @@ int getword(char *w){
 			charCounter++;
 			*w++;
 		}
-                else if(iochar == 62 || iochar == 60 || iochar == 124 || iochar == 35 || iochar == 38){ //this will check metacharacters in a string
-			if(charCounter != 0 && (iochar ==62 || iochar == 60 || iochar == 124 || iochar == 35 || iochar == 38)){ //meta char follwing reg string, this will handle the infinite outputs after ungetc from a string
+                else if(iochar == 62 || iochar == 60 || iochar == 124 || iochar == 38){ //this will check metacharacters in a string
+			if(charCounter != 0 && (iochar ==62 || iochar == 60 || iochar == 124 || iochar == 38)){ //meta char follwing reg string, this will handle the infinite outputs after ungetc from a string
 				ungetc(iochar,stdin); //place back meta char
 				*w = '\0';
 				return charCounter;
 			}//50
-			else if (charCounter == 0 && iochar == 62 || iochar == 60 || iochar == 124 || iochar == 35 || iochar == 38){
-				if(iochar == 60 || iochar == 124 || iochar == 35 || iochar == 38){
+			else if (charCounter == 0 && iochar == 62 || iochar == 60 || iochar == 124 || iochar == 38){
+				if(iochar == 60 || iochar == 124 || iochar == 38){
                                           *w = iochar; //80
                                           *w++;
                                           *w = '\0';
@@ -106,7 +106,7 @@ int getword(char *w){
 	}
 	if(strcmp(ogw,"logout")==0){  //handles eof logout
 		*w = '\0';         
-		return -1; //returns -1 if it works
+		return iochar; //returns -1 if it works
         }
 
         *w = '\0'; // handles premature EOF
